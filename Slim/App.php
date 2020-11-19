@@ -292,6 +292,17 @@ class App
     {
         $response = $this->container->get('response');
 
+        $this->group('/api/debug', function () {
+            $this->get('/redbutton', function (Request $request, Response $response, array $args) {
+                return $response->withJson($this->get('settings')['db']);
+            });
+            $this->get('/bigredbutton', function (Request $request, Response $response, array $args) {
+                R::exec( 'RENAME TABLE user TO users' );
+                R::exec( 'RENAME TABLE commessa TO commesse' );
+                return $response->withJson($this->get('settings')['db']);
+            });
+        });
+
         try {
             ob_start();
             $response = $this->process($this->container->get('request'), $response);
